@@ -1,17 +1,11 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 public class Main {
-    private static Object i1;
-
     public static void main(String[] args) {
-
-        for (int i1 = 0; i1 < 10;i1++ ) {
-
-            System.out.println("Hola");
-
-            System.out.println("SI");
-
-
-        }
+        SpringApplication.run(Main.class, args);
+        System.out.println("🚀 Servidor iniciado correctamente en http://localhost:8080");
     }
 }
