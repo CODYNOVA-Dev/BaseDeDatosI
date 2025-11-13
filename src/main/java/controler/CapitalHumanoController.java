@@ -7,13 +7,15 @@ import service.CapitalHumanoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequestMapping("/Gerdoc/api")
 @RestController
 @AllArgsConstructor
-public class UsuarioCHController {
+public class CapitalHumanoController {
 
     private final CapitalHumanoService capitalHumanoService;
 
@@ -100,4 +102,3 @@ public class UsuarioCHController {
                 .build());
     }
 }
-
