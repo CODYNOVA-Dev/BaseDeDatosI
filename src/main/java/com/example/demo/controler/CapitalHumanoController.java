@@ -1,8 +1,8 @@
-package controler;
+package com.example.demo.controler;
 
-import dto.CapitalHumanoDto;
-import model.CapitalHumano;
-import service.CapitalHumanoService;
+import com.example.demo.dto.CapitalHumanoDto;
+import com.example.demo.model.CapitalHumano;
+import com.example.demo.service.CapitalHumanoService;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("/Gerdoc/api")
+@RequestMapping("/indecsa/api")
 @RestController
 @AllArgsConstructor
 public class CapitalHumanoController {
@@ -23,6 +23,7 @@ public class CapitalHumanoController {
     @GetMapping("/capitalhumano")
     public ResponseEntity<List<CapitalHumanoDto>> lista(
             @RequestParam(name = "correo", defaultValue = "", required = false) String correo) {
+        System.out.println("Hola capital");
 
         List<CapitalHumano> lista = capitalHumanoService.getAll();
 

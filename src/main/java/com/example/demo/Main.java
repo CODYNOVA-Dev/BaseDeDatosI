@@ -1,4 +1,4 @@
-package com.indecsa.BaseDeDatos1;
+package com.example.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,3 +10,4 @@ public class Main {
         System.out.println("🚀 Servidor iniciado correctamente en http://localhost:8080");
     }
 }
+
