@@ -37,4 +37,14 @@ public class CapitalHumanoService {
         u.setContraseñaCapHum(datos.getContraseñaCapHum());
         return repo.save(u);
     }
+
+    // 🔐 MÉTODOS DE LOGIN - CORREGIDOS
+    public CapitalHumano login(String correo, String contraseña) {
+        return repo.findByCorreoCapHumAndContraseñaCapHum(correo, contraseña)
+                .orElse(null);
+    }
+
+    public boolean existsByCorreo(String correo) {
+        return repo.findByCorreoCapHum(correo).isPresent();
+    }
 }

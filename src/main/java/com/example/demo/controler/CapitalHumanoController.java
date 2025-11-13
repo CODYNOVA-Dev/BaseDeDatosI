@@ -101,4 +101,35 @@ public class CapitalHumanoController {
                 .contraseñaCapHum(actualizado.getContraseñaCapHum())
                 .build());
     }
+    // En CapitalHumanoController.java
+    @PostMapping("/capitalhumano/login")
+    public ResponseEntity<CapitalHumanoDto.LoginResponse> login(@RequestBody CapitalHumanoDto.LoginRequest loginRequest) {
+        System.out.println("🔐 Intento de login capital humano: " + loginRequest.getCorreoCapHum());
+
+        CapitalHumano capitalHumano = capitalHumanoService.login(loginRequest.getCorreoCapHum(), loginRequest.getContraseñaCapHum());
+
+        if (capitalHumano != null) {
+            CapitalHumanoDto capitalHumanoDto = CapitalHumanoDto.builder()
+                    .idCapHum(capitalHumano.getIdCapHum())
+                    .correoCapHum(capitalHumano.getCorreoCapHum())
+                    .build();
+
+            CapitalHumanoDto.LoginResponse response = CapitalHumanoDto.LoginResponse.builder()
+                    .success(true)
+                    .message("Login exitoso")
+                    .capitalHumano(capitalHumanoDto)
+                    .build();
+
+            return ResponseEntity.ok(response);
+        } else {
+            CapitalHumanoDto.LoginResponse response = CapitalHumanoDto.LoginResponse.builder()
+                    .success(false)
+                    .message("Credenciales incorrectas")
+                    .capitalHumano(null)
+                    .build();
+
+            return ResponseEntity.status(401).body(response);
+        }
+
+    }
 }
