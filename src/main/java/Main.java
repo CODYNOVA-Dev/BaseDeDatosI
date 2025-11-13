@@ -4,13 +4,10 @@ public class Main {
     private static Object i1;
 
     public static void main(String[] args) {
-        System.out.println("Hola Toromax");
-        System.out.println("Hola Kikin");
-
 
         for (int i1 = 0; i1 < 10;i1++ ) {
 
-            System.out.println("Hola chupe de jaiba");
+            System.out.println("Hola");
 
             System.out.println("SI");
 

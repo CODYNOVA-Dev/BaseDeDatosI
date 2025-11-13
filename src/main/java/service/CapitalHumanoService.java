@@ -1,6 +1,7 @@
 package service;
 
 import model.CapitalHumano;
+import repository.CapitalHumanoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
