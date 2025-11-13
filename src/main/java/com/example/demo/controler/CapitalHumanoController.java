@@ -23,13 +23,13 @@ public class CapitalHumanoController {
     @GetMapping("/capitalhumano")
     public ResponseEntity<List<CapitalHumanoDto>> lista(
             @RequestParam(name = "correo", defaultValue = "", required = false) String correo) {
-        System.out.println("Hola capital");
 
         List<CapitalHumano> lista = capitalHumanoService.getAll();
 
         if (lista == null || lista.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
 
         // Filtrar por correo si se envía como parámetro
         if (correo != null && !correo.isEmpty()) {
@@ -47,7 +47,6 @@ public class CapitalHumanoController {
                                 .build())
                         .collect(Collectors.toList()));
     }
-
     // 🔹 GET por ID
     @GetMapping("/capitalhumano/{id}")
     public ResponseEntity<CapitalHumanoDto> getById(@PathVariable Integer id) {

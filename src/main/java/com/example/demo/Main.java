@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
-        System.out.println("🚀 Servidor iniciado correctamente en http://localhost:8080");
+        System.out.println("Servidor iniciado correctamente en http://localhost:8080");
     }
 }
 
