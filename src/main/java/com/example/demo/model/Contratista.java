@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "contratista")
-@Data // ← Esto genera automáticamente los getters: getDescripcionContratista()
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,19 +23,19 @@ public class Contratista {
     @Column(name = "estado_contratista", length = 50)
     private String estadoContratista;
 
-    @Column(name = "description_contratista", length = 100) // ← "description" en BD
-    private String descripcionContratista; // ← "descripcion" en Java (con "c")
+    @Column(name = "descripcion_contratista", length = 100, nullable = false) // ← CORREGIDO: "descripcion_contratista"
+    private String descripcionContratista;
 
     @Column(name = "calificacion")
     private Integer calificacion;
 
-    @Column(name = "especialidad", length = 25)
+    @Column(name = "especialidad", length = 25, nullable = false)
     private String especialidad;
 
-    @Column(name = "telefono", length = 15)
+    @Column(name = "telefono", length = 15, nullable = false)
     private String telefono;
 
-    @Column(name = "correo", length = 50)
+    @Column(name = "correo", length = 50, nullable = false)
     private String correo;
 
     @OneToMany(mappedBy = "contratista", cascade = CascadeType.ALL)

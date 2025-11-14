@@ -11,17 +11,20 @@ public class CapitalHumanoDto {
     private String correoCapHum;
     private String contraseñaCapHum;
 
-    // 🔐 DTO para login
+    // 🔐 AGREGAR CLASES INTERNAS PARA LOGIN
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class LoginRequest {
         private String correoCapHum;
         private String contraseñaCapHum;
     }
 
-    // 🔐 DTO para respuesta de login
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class LoginResponse {
         private boolean success;
         private String message;

@@ -4,7 +4,6 @@ import com.example.demo.model.CapitalHumano;
 import com.example.demo.repository.CapitalHumanoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -38,7 +37,7 @@ public class CapitalHumanoService {
         return repo.save(u);
     }
 
-    // 🔐 MÉTODOS DE LOGIN - CORREGIDOS
+    // 🔐 AGREGAR MÉTODOS DE LOGIN
     public CapitalHumano login(String correo, String contraseña) {
         return repo.findByCorreoCapHumAndContraseñaCapHum(correo, contraseña)
                 .orElse(null);

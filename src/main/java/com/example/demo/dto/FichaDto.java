@@ -13,9 +13,9 @@ public class FichaDto {
     private Integer idAdmin;
     private Integer idCapHum;
 
-    // Opcional: incluir datos completos de las relaciones
-    private ContratistaDto contratista;
-    private ProyectoDto proyecto;
-    private AdminDto admin;
-    private CapitalHumanoDto capitalHumano;
+    // ❌ QUITAR ESTOS - solo usar IDs
+    // private ContratistaDto contratista;
+    // private ProyectoDto proyecto;
+    // private AdminDto admin;
+    // private CapitalHumanoDto capitalHumano;
 }

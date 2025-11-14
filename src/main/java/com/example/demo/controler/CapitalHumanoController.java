@@ -3,12 +3,9 @@ package com.example.demo.controler;
 import com.example.demo.dto.CapitalHumanoDto;
 import com.example.demo.model.CapitalHumano;
 import com.example.demo.service.CapitalHumanoService;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +16,44 @@ public class CapitalHumanoController {
 
     private final CapitalHumanoService capitalHumanoService;
 
-    // 🔹 GET: obtener todos o filtrar por correo
+    // 🔐 AGREGAR ENDPOINT DE LOGIN
+    @PostMapping("/capitalhumano/login")
+    public ResponseEntity<CapitalHumanoDto.LoginResponse> login(@RequestBody CapitalHumanoDto.LoginRequest loginRequest) {
+        System.out.println("🔐 Intento de login: " + loginRequest.getCorreoCapHum());
+
+        CapitalHumano capitalHumano = capitalHumanoService.login(
+                loginRequest.getCorreoCapHum(),
+                loginRequest.getContraseñaCapHum()
+        );
+
+        if (capitalHumano != null) {
+            // Login exitoso
+            CapitalHumanoDto capitalHumanoDto = CapitalHumanoDto.builder()
+                    .idCapHum(capitalHumano.getIdCapHum())
+                    .correoCapHum(capitalHumano.getCorreoCapHum())
+                    // No enviar contraseña por seguridad
+                    .build();
+
+            CapitalHumanoDto.LoginResponse response = CapitalHumanoDto.LoginResponse.builder()
+                    .success(true)
+                    .message("Login exitoso")
+                    .capitalHumano(capitalHumanoDto)
+                    .build();
+
+            return ResponseEntity.ok(response);
+        } else {
+            // Login fallido
+            CapitalHumanoDto.LoginResponse response = CapitalHumanoDto.LoginResponse.builder()
+                    .success(false)
+                    .message("Credenciales incorrectas")
+                    .capitalHumano(null)
+                    .build();
+
+            return ResponseEntity.status(401).body(response);
+        }
+    }
+
+    // 🔹 GET: obtener todos o filtrar por correo (TU CÓDIGO ORIGINAL)
     @GetMapping("/capitalhumano")
     public ResponseEntity<List<CapitalHumanoDto>> lista(
             @RequestParam(name = "correo", defaultValue = "", required = false) String correo) {
@@ -29,7 +63,6 @@ public class CapitalHumanoController {
         if (lista == null || lista.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
 
         // Filtrar por correo si se envía como parámetro
         if (correo != null && !correo.isEmpty()) {
@@ -47,7 +80,8 @@ public class CapitalHumanoController {
                                 .build())
                         .collect(Collectors.toList()));
     }
-    // 🔹 GET por ID
+
+    // 🔹 GET por ID (TU CÓDIGO ORIGINAL)
     @GetMapping("/capitalhumano/{id}")
     public ResponseEntity<CapitalHumanoDto> getById(@PathVariable Integer id) {
         CapitalHumano u = capitalHumanoService.getById(id);
@@ -61,7 +95,7 @@ public class CapitalHumanoController {
                 .build());
     }
 
-    // 🔹 POST: insertar nuevo registro
+    // 🔹 POST: insertar nuevo registro (TU CÓDIGO ORIGINAL)
     @PostMapping("/capitalhumano")
     public ResponseEntity<CapitalHumanoDto> save(@RequestBody CapitalHumanoDto dto) {
         CapitalHumano u = CapitalHumano.builder()
@@ -78,14 +112,14 @@ public class CapitalHumanoController {
                 .build());
     }
 
-    // 🔹 DELETE: eliminar por id
+    // 🔹 DELETE: eliminar por id (TU CÓDIGO ORIGINAL)
     @DeleteMapping("/capitalhumano/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         capitalHumanoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    // 🔹 PUT: actualizar
+    // 🔹 PUT: actualizar (TU CÓDIGO ORIGINAL)
     @PutMapping("/capitalhumano/{id}")
     public ResponseEntity<CapitalHumanoDto> update(@PathVariable Integer id, @RequestBody CapitalHumanoDto dto) {
         CapitalHumano u = CapitalHumano.builder()
@@ -100,36 +134,5 @@ public class CapitalHumanoController {
                 .correoCapHum(actualizado.getCorreoCapHum())
                 .contraseñaCapHum(actualizado.getContraseñaCapHum())
                 .build());
-    }
-    // En CapitalHumanoController.java
-    @PostMapping("/capitalhumano/login")
-    public ResponseEntity<CapitalHumanoDto.LoginResponse> login(@RequestBody CapitalHumanoDto.LoginRequest loginRequest) {
-        System.out.println("🔐 Intento de login capital humano: " + loginRequest.getCorreoCapHum());
-
-        CapitalHumano capitalHumano = capitalHumanoService.login(loginRequest.getCorreoCapHum(), loginRequest.getContraseñaCapHum());
-
-        if (capitalHumano != null) {
-            CapitalHumanoDto capitalHumanoDto = CapitalHumanoDto.builder()
-                    .idCapHum(capitalHumano.getIdCapHum())
-                    .correoCapHum(capitalHumano.getCorreoCapHum())
-                    .build();
-
-            CapitalHumanoDto.LoginResponse response = CapitalHumanoDto.LoginResponse.builder()
-                    .success(true)
-                    .message("Login exitoso")
-                    .capitalHumano(capitalHumanoDto)
-                    .build();
-
-            return ResponseEntity.ok(response);
-        } else {
-            CapitalHumanoDto.LoginResponse response = CapitalHumanoDto.LoginResponse.builder()
-                    .success(false)
-                    .message("Credenciales incorrectas")
-                    .capitalHumano(null)
-                    .build();
-
-            return ResponseEntity.status(401).body(response);
-        }
-
     }
 }
