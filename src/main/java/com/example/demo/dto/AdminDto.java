@@ -13,7 +13,8 @@ public class AdminDto {
 
     // DTO para login (sin id)
     @Data
-    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class LoginRequest {
         private String correoAdmin;
         private String contraseñaAdmin;
@@ -22,6 +23,8 @@ public class AdminDto {
     // DTO para respuesta de login
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class LoginResponse {
         private boolean success;
         private String message;

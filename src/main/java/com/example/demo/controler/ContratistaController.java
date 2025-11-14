@@ -34,7 +34,7 @@ public class ContratistaController {
 
     // 🔹 GET: Obtener contratista por ID
     @GetMapping("/contratistas/{id}")
-    public ResponseEntity<ContratistaDto> getById(@PathVariable Integer id) {
+    public ResponseEntity<ContratistaDto> getById(@PathVariable("id") Integer id) {
         Contratista contratista = contratistaService.getById(id);
         if (contratista == null) {
             return ResponseEntity.notFound().build();

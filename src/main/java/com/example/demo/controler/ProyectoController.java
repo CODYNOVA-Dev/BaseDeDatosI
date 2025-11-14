@@ -34,7 +34,7 @@ public class ProyectoController {
 
     // 🔹 GET: Obtener proyecto por ID
     @GetMapping("/proyectos/{id}")
-    public ResponseEntity<ProyectoDto> getById(@PathVariable Integer id) {
+    public ResponseEntity<ProyectoDto> getById(@PathVariable("id") Integer id) {
         Proyecto proyecto = proyectoService.getById(id);
         if (proyecto == null) {
             return ResponseEntity.notFound().build();

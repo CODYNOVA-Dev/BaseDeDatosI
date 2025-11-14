@@ -34,7 +34,7 @@ public class TrabajadorController {
 
     // 🔹 GET: Obtener trabajador por ID
     @GetMapping("/trabajadores/{id}")
-    public ResponseEntity<TrabajadorDto> getById(@PathVariable Integer id) {
+    public ResponseEntity<TrabajadorDto> getById(@PathVariable("id") Integer id) {
         Trabajador trabajador = trabajadorService.getById(id);
         if (trabajador == null) {
             return ResponseEntity.notFound().build();

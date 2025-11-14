@@ -83,16 +83,20 @@ public class CapitalHumanoController {
 
     // 🔹 GET por ID (TU CÓDIGO ORIGINAL)
     @GetMapping("/capitalhumano/{id}")
-    public ResponseEntity<CapitalHumanoDto> getById(@PathVariable Integer id) {
+    public ResponseEntity<CapitalHumanoDto> getById(@PathVariable("id") Integer id) {
         CapitalHumano u = capitalHumanoService.getById(id);
+
         if (u == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(CapitalHumanoDto.builder()
-                .idCapHum(u.getIdCapHum())
-                .correoCapHum(u.getCorreoCapHum())
-                .contraseñaCapHum(u.getContraseñaCapHum())
-                .build());
+
+        return ResponseEntity.ok(
+                CapitalHumanoDto.builder()
+                        .idCapHum(u.getIdCapHum())
+                        .correoCapHum(u.getCorreoCapHum())
+                        .contraseñaCapHum(u.getContraseñaCapHum())
+                        .build()
+        );
     }
 
     // 🔹 POST: insertar nuevo registro (TU CÓDIGO ORIGINAL)

@@ -34,7 +34,7 @@ public class FichaController {
 
     // 🔹 GET: Obtener ficha por ID
     @GetMapping("/fichas/{id}")
-    public ResponseEntity<FichaDto> getById(@PathVariable Integer id) {
+    public ResponseEntity<FichaDto> getById(@PathVariable("id") Integer id) {
         Ficha ficha = fichaService.getById(id);
         if (ficha == null) {
             return ResponseEntity.notFound().build();
