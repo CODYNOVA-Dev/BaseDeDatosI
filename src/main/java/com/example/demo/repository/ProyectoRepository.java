@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProyectoRepository extends JpaRepository<Proyecto, Integer> {
     // Métodos personalizados si los necesitas
-    boolean existsByNombreProyecto(String nombreProyecto);
+    boolean existsByNombreProyecto(String nombreProyecto );
 }
