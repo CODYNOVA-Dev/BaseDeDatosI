@@ -37,7 +37,6 @@ public class CapitalHumanoService {
         return repo.save(u);
     }
 
-    // 🔐 AGREGAR MÉTODOS DE LOGIN
     public CapitalHumano login(String correo, String contraseña) {
         return repo.findByCorreoCapHumAndContraseñaCapHum(correo, contraseña)
                 .orElse(null);

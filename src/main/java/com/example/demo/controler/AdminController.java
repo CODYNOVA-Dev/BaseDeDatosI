@@ -16,7 +16,7 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    // 🔐 ENDPOINT DE LOGIN
+
     @PostMapping("/admin/login")
     public ResponseEntity<AdminDto.LoginResponse> login(@RequestBody AdminDto.LoginRequest loginRequest) {
         System.out.println("🔐 Intento de login admin: " + loginRequest.getCorreoAdmin());
@@ -24,7 +24,7 @@ public class AdminController {
         Admin admin = adminService.login(loginRequest.getCorreoAdmin(), loginRequest.getContraseñaAdmin());
 
         if (admin != null) {
-            // Login exitoso
+
             AdminDto adminDto = AdminDto.builder()
                     .idAdmin(admin.getIdAdmin())
                     .correoAdmin(admin.getCorreoAdmin())
@@ -49,7 +49,6 @@ public class AdminController {
         }
     }
 
-    // 📋 GET: Obtener todos los admins
     @GetMapping("/admin")
     public ResponseEntity<List<AdminDto>> getAll() {
         List<Admin> lista = adminService.getAll();
@@ -69,7 +68,6 @@ public class AdminController {
         );
     }
 
-    // ➕ POST: Crear nuevo admin
     @PostMapping("/admin")
     public ResponseEntity<AdminDto> create(@RequestBody AdminDto dto) {
         // Verificar si el correo ya existe
@@ -90,7 +88,6 @@ public class AdminController {
                 .build());
     }
 
-    // 🗑️ DELETE: Eliminar admin
     @DeleteMapping("/admin/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         adminService.delete(id);

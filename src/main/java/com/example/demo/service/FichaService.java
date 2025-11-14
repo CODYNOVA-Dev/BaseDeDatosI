@@ -25,7 +25,6 @@ public class FichaService {
     }
 
     public Ficha save(Ficha ficha) {
-        // Verificar que las entidades relacionadas existan
         if (ficha.getContratista() != null &&
                 !contratistaRepository.existsById(ficha.getContratista().getIdContratista())) {
             throw new RuntimeException("Contratista no encontrado");
@@ -54,7 +53,6 @@ public class FichaService {
         Ficha fichaExistente = getById(id);
         if (fichaExistente == null) return null;
 
-        // Actualizar relaciones si se proporcionan
         if (datos.getContratista() != null) {
             fichaExistente.setContratista(datos.getContratista());
         }
@@ -71,7 +69,6 @@ public class FichaService {
         return fichaRepository.save(fichaExistente);
     }
 
-    // Métodos para buscar por relaciones
     public List<Ficha> getByProyecto(Integer idProyecto) {
         return fichaRepository.findByProyectoIdProyecto(idProyecto);
     }

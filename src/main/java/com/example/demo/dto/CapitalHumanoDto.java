@@ -11,7 +11,6 @@ public class CapitalHumanoDto {
     private String correoCapHum;
     private String contraseñaCapHum;
 
-    // 🔐 AGREGAR CLASES INTERNAS PARA LOGIN
     @Data
     @Builder
     @NoArgsConstructor

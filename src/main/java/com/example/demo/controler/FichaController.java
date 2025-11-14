@@ -16,7 +16,6 @@ public class FichaController {
 
     private final FichaService fichaService;
 
-    // 🔹 GET: Obtener todas las fichas
     @GetMapping("/fichas")
     public ResponseEntity<List<FichaDto>> getAll() {
         List<Ficha> lista = fichaService.getAll();
@@ -32,7 +31,6 @@ public class FichaController {
         );
     }
 
-    // 🔹 GET: Obtener ficha por ID
     @GetMapping("/fichas/{id}")
     public ResponseEntity<FichaDto> getById(@PathVariable("id") Integer id) {
         Ficha ficha = fichaService.getById(id);
@@ -42,7 +40,6 @@ public class FichaController {
         return ResponseEntity.ok(convertToDto(ficha));
     }
 
-    // 🔹 GET: Obtener fichas por Proyecto
     @GetMapping("/fichas/proyecto/{idProyecto}")
     public ResponseEntity<List<FichaDto>> getByProyecto(@PathVariable Integer idProyecto) {
         List<Ficha> fichas = fichaService.getByProyecto(idProyecto);
@@ -53,7 +50,6 @@ public class FichaController {
         );
     }
 
-    // 🔹 POST: Crear nueva ficha
     @PostMapping("/fichas")
     public ResponseEntity<FichaDto> create(@RequestBody FichaDto dto) {
         try {
@@ -65,7 +61,6 @@ public class FichaController {
         }
     }
 
-    // 🔹 PUT: Actualizar ficha
     @PutMapping("/fichas/{id}")
     public ResponseEntity<FichaDto> update(@PathVariable Integer id, @RequestBody FichaDto dto) {
         Ficha ficha = convertToEntity(dto);
@@ -78,14 +73,12 @@ public class FichaController {
         return ResponseEntity.ok(convertToDto(actualizado));
     }
 
-    // 🔹 DELETE: Eliminar ficha
     @DeleteMapping("/fichas/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         fichaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Métodos auxiliares para conversión
     private FichaDto convertToDto(Ficha ficha) {
         return FichaDto.builder()
                 .idFicha(ficha.getIdFicha())
@@ -99,7 +92,6 @@ public class FichaController {
     private Ficha convertToEntity(FichaDto dto) {
         Ficha ficha = new Ficha();
 
-        // Establecer relaciones si se proporcionan IDs
         if (dto.getIdContratista() != null) {
             Contratista contratista = new Contratista();
             contratista.setIdContratista(dto.getIdContratista());

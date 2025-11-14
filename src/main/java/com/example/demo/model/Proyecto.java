@@ -36,7 +36,6 @@ public class Proyecto {
     @Column(name = "cliente_proyecto", length = 50)
     private String clienteProyecto;
 
-    // 🔄 RELACIÓN CON FICHA
     @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL)
     private List<Ficha> fichas = new ArrayList<>();
 }

@@ -16,7 +16,6 @@ public class ProyectoController {
 
     private final ProyectoService proyectoService;
 
-    // 🔹 GET: Obtener todos los proyectos
     @GetMapping("/proyectos")
     public ResponseEntity<List<ProyectoDto>> getAll() {
         List<Proyecto> lista = proyectoService.getAll();
@@ -32,7 +31,6 @@ public class ProyectoController {
         );
     }
 
-    // 🔹 GET: Obtener proyecto por ID
     @GetMapping("/proyectos/{id}")
     public ResponseEntity<ProyectoDto> getById(@PathVariable("id") Integer id) {
         Proyecto proyecto = proyectoService.getById(id);
@@ -42,7 +40,6 @@ public class ProyectoController {
         return ResponseEntity.ok(convertToDto(proyecto));
     }
 
-    // 🔹 POST: Crear nuevo proyecto
     @PostMapping("/proyectos")
     public ResponseEntity<ProyectoDto> create(@RequestBody ProyectoDto dto) {
         // Verificar si ya existe un proyecto con el mismo nombre
@@ -56,7 +53,6 @@ public class ProyectoController {
         return ResponseEntity.ok(convertToDto(saved));
     }
 
-    // 🔹 PUT: Actualizar proyecto
     @PutMapping("/proyectos/{id}")
     public ResponseEntity<ProyectoDto> update(@PathVariable Integer id, @RequestBody ProyectoDto dto) {
         Proyecto proyecto = convertToEntity(dto);
@@ -69,14 +65,12 @@ public class ProyectoController {
         return ResponseEntity.ok(convertToDto(actualizado));
     }
 
-    // 🔹 DELETE: Eliminar proyecto
     @DeleteMapping("/proyectos/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         proyectoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Métodos auxiliares para conversión
     private ProyectoDto convertToDto(Proyecto proyecto) {
         return ProyectoDto.builder()
                 .idProyecto(proyecto.getIdProyecto())

@@ -23,7 +23,6 @@ public class Admin {
     @Column(name = "contraseña_admin", length = 255)
     private String contraseñaAdmin;
 
-    // 🔄 RELACIÓN CON FICHA
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     private List<Ficha> fichas = new ArrayList<>();
 }

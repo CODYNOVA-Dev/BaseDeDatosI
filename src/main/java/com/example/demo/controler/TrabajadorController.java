@@ -16,7 +16,6 @@ public class TrabajadorController {
 
     private final TrabajadorService trabajadorService;
 
-    // 🔹 GET: Obtener todos los trabajadores
     @GetMapping("/trabajadores")
     public ResponseEntity<List<TrabajadorDto>> getAll() {
         List<Trabajador> lista = trabajadorService.getAll();
@@ -32,7 +31,6 @@ public class TrabajadorController {
         );
     }
 
-    // 🔹 GET: Obtener trabajador por ID
     @GetMapping("/trabajadores/{id}")
     public ResponseEntity<TrabajadorDto> getById(@PathVariable("id") Integer id) {
         Trabajador trabajador = trabajadorService.getById(id);
@@ -42,7 +40,6 @@ public class TrabajadorController {
         return ResponseEntity.ok(convertToDto(trabajador));
     }
 
-    // 🔹 GET: Obtener trabajador por NSS
     @GetMapping("/trabajadores/nss/{nss}")
     public ResponseEntity<TrabajadorDto> getByNss(@PathVariable String nss) {
         Trabajador trabajador = trabajadorService.getByNss(nss);
@@ -52,7 +49,6 @@ public class TrabajadorController {
         return ResponseEntity.ok(convertToDto(trabajador));
     }
 
-    // 🔹 POST: Crear nuevo trabajador
     @PostMapping("/trabajadores")
     public ResponseEntity<TrabajadorDto> create(@RequestBody TrabajadorDto dto) {
         // Verificar si ya existe un trabajador con el mismo NSS
@@ -66,7 +62,6 @@ public class TrabajadorController {
         return ResponseEntity.ok(convertToDto(saved));
     }
 
-    // 🔹 PUT: Actualizar trabajador
     @PutMapping("/trabajadores/{id}")
     public ResponseEntity<TrabajadorDto> update(@PathVariable Integer id, @RequestBody TrabajadorDto dto) {
         Trabajador trabajador = convertToEntity(dto);
@@ -79,14 +74,12 @@ public class TrabajadorController {
         return ResponseEntity.ok(convertToDto(actualizado));
     }
 
-    // 🔹 DELETE: Eliminar trabajador
     @DeleteMapping("/trabajadores/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         trabajadorService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Métodos auxiliares para conversión
     private TrabajadorDto convertToDto(Trabajador trabajador) {
         return TrabajadorDto.builder()
                 .idTrabajador(trabajador.getIdTrabajador())

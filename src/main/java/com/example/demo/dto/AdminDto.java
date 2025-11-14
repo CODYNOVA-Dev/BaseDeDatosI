@@ -11,7 +11,6 @@ public class AdminDto {
     private String correoAdmin;
     private String contraseñaAdmin;
 
-    // DTO para login (sin id)
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -20,7 +19,6 @@ public class AdminDto {
         private String contraseñaAdmin;
     }
 
-    // DTO para respuesta de login
     @Data
     @Builder
     @NoArgsConstructor

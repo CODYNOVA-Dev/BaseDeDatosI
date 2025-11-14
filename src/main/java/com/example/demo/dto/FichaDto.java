@@ -13,9 +13,5 @@ public class FichaDto {
     private Integer idAdmin;
     private Integer idCapHum;
 
-    // ❌ QUITAR ESTOS - solo usar IDs
-    // private ContratistaDto contratista;
-    // private ProyectoDto proyecto;
-    // private AdminDto admin;
-    // private CapitalHumanoDto capitalHumano;
+
 }

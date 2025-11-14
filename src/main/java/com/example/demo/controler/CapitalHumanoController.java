@@ -16,7 +16,6 @@ public class CapitalHumanoController {
 
     private final CapitalHumanoService capitalHumanoService;
 
-    // 🔐 AGREGAR ENDPOINT DE LOGIN
     @PostMapping("/capitalhumano/login")
     public ResponseEntity<CapitalHumanoDto.LoginResponse> login(@RequestBody CapitalHumanoDto.LoginRequest loginRequest) {
         System.out.println("🔐 Intento de login: " + loginRequest.getCorreoCapHum());
@@ -27,11 +26,9 @@ public class CapitalHumanoController {
         );
 
         if (capitalHumano != null) {
-            // Login exitoso
             CapitalHumanoDto capitalHumanoDto = CapitalHumanoDto.builder()
                     .idCapHum(capitalHumano.getIdCapHum())
                     .correoCapHum(capitalHumano.getCorreoCapHum())
-                    // No enviar contraseña por seguridad
                     .build();
 
             CapitalHumanoDto.LoginResponse response = CapitalHumanoDto.LoginResponse.builder()
@@ -42,7 +39,6 @@ public class CapitalHumanoController {
 
             return ResponseEntity.ok(response);
         } else {
-            // Login fallido
             CapitalHumanoDto.LoginResponse response = CapitalHumanoDto.LoginResponse.builder()
                     .success(false)
                     .message("Credenciales incorrectas")
@@ -53,7 +49,6 @@ public class CapitalHumanoController {
         }
     }
 
-    // 🔹 GET: obtener todos o filtrar por correo (TU CÓDIGO ORIGINAL)
     @GetMapping("/capitalhumano")
     public ResponseEntity<List<CapitalHumanoDto>> lista(
             @RequestParam(name = "correo", defaultValue = "", required = false) String correo) {
@@ -64,7 +59,6 @@ public class CapitalHumanoController {
             return ResponseEntity.notFound().build();
         }
 
-        // Filtrar por correo si se envía como parámetro
         if (correo != null && !correo.isEmpty()) {
             lista = lista.stream()
                     .filter(u -> u.getCorreoCapHum().equalsIgnoreCase(correo))
@@ -81,7 +75,6 @@ public class CapitalHumanoController {
                         .collect(Collectors.toList()));
     }
 
-    // 🔹 GET por ID (TU CÓDIGO ORIGINAL)
     @GetMapping("/capitalhumano/{id}")
     public ResponseEntity<CapitalHumanoDto> getById(@PathVariable("id") Integer id) {
         CapitalHumano u = capitalHumanoService.getById(id);
@@ -99,7 +92,6 @@ public class CapitalHumanoController {
         );
     }
 
-    // 🔹 POST: insertar nuevo registro (TU CÓDIGO ORIGINAL)
     @PostMapping("/capitalhumano")
     public ResponseEntity<CapitalHumanoDto> save(@RequestBody CapitalHumanoDto dto) {
         CapitalHumano u = CapitalHumano.builder()
@@ -116,14 +108,12 @@ public class CapitalHumanoController {
                 .build());
     }
 
-    // 🔹 DELETE: eliminar por id (TU CÓDIGO ORIGINAL)
     @DeleteMapping("/capitalhumano/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         capitalHumanoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    // 🔹 PUT: actualizar (TU CÓDIGO ORIGINAL)
     @PutMapping("/capitalhumano/{id}")
     public ResponseEntity<CapitalHumanoDto> update(@PathVariable Integer id, @RequestBody CapitalHumanoDto dto) {
         CapitalHumano u = CapitalHumano.builder()

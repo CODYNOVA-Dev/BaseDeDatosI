@@ -39,13 +39,11 @@ public class AdminService {
         return null;
     }
 
-    // 🔐 MÉTODO ESPECIAL PARA LOGIN
     public Admin login(String correo, String contraseña) {
         return adminRepository.findByCorreoAdminAndContraseñaAdmin(correo, contraseña)
                 .orElse(null);
     }
 
-    // Verificar si existe el correo
     public boolean existsByCorreo(String correo) {
         return adminRepository.findByCorreoAdmin(correo).isPresent();
     }

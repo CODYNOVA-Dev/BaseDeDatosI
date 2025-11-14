@@ -16,7 +16,6 @@ public class ContratistaController {
 
     private final ContratistaService contratistaService;
 
-    // 🔹 GET: Obtener todos los contratistas
     @GetMapping("/contratistas")
     public ResponseEntity<List<ContratistaDto>> getAll() {
         List<Contratista> lista = contratistaService.getAll();
@@ -32,7 +31,6 @@ public class ContratistaController {
         );
     }
 
-    // 🔹 GET: Obtener contratista por ID
     @GetMapping("/contratistas/{id}")
     public ResponseEntity<ContratistaDto> getById(@PathVariable("id") Integer id) {
         Contratista contratista = contratistaService.getById(id);
@@ -42,7 +40,6 @@ public class ContratistaController {
         return ResponseEntity.ok(convertToDto(contratista));
     }
 
-    // 🔹 POST: Crear nuevo contratista
     @PostMapping("/contratistas")
     public ResponseEntity<ContratistaDto> create(@RequestBody ContratistaDto dto) {
         // Verificar si ya existe un contratista con el mismo correo
@@ -56,7 +53,6 @@ public class ContratistaController {
         return ResponseEntity.ok(convertToDto(saved));
     }
 
-    // 🔹 PUT: Actualizar contratista
     @PutMapping("/contratistas/{id}")
     public ResponseEntity<ContratistaDto> update(@PathVariable Integer id, @RequestBody ContratistaDto dto) {
         Contratista contratista = convertToEntity(dto);
@@ -69,14 +65,12 @@ public class ContratistaController {
         return ResponseEntity.ok(convertToDto(actualizado));
     }
 
-    // 🔹 DELETE: Eliminar contratista
     @DeleteMapping("/contratistas/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         contratistaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Métodos auxiliares para conversión
     private ContratistaDto convertToDto(Contratista contratista) {
         return ContratistaDto.builder()
                 .idContratista(contratista.getIdContratista())

@@ -7,7 +7,6 @@ import java.util.Optional;
 
 @Repository
 public interface CapitalHumanoRepository extends JpaRepository<CapitalHumano, Integer> {
-    // 🔐 AGREGAR ESTOS MÉTODOS PARA LOGIN
     Optional<CapitalHumano> findByCorreoCapHum(String correoCapHum);
     Optional<CapitalHumano> findByCorreoCapHumAndContraseñaCapHum(String correoCapHum, String contraseñaCapHum);
 }
