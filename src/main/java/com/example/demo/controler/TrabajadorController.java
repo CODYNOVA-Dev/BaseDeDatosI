@@ -51,7 +51,6 @@ public class TrabajadorController {
 
     @PostMapping("/trabajadores")
     public ResponseEntity<TrabajadorDto> create(@RequestBody TrabajadorDto dto) {
-        // Verificar si ya existe un trabajador con el mismo NSS
         if (trabajadorService.existsByNss(dto.getNssTrabajador())) {
             return ResponseEntity.badRequest().build();
         }
@@ -80,6 +79,78 @@ public class TrabajadorController {
         return ResponseEntity.noContent().build();
     }
 
+    // =====================================================
+    // NUEVOS MÉTODOS PARA LA APP ANDROID
+    // =====================================================
+
+    @GetMapping("/trabajadores/filtros")
+    public ResponseEntity<List<TrabajadorDto>> getTrabajadoresFiltrados(
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String especialidad) {
+
+        List<Trabajador> trabajadores = trabajadorService.getAll();
+
+        if (estado != null && !estado.isEmpty()) {
+            trabajadores = trabajadores.stream()
+                    .filter(t -> estado.equalsIgnoreCase(t.getEstadoTrabajador()))
+                    .collect(Collectors.toList());
+        }
+
+        if (especialidad != null && !especialidad.isEmpty()) {
+            trabajadores = trabajadores.stream()
+                    .filter(t -> especialidad.equalsIgnoreCase(t.getEspecialidadTrabajador()))
+                    .collect(Collectors.toList());
+        }
+
+        if (trabajadores.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<TrabajadorDto> dtos = trabajadores.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/trabajadores/estado/{estado}")
+    public ResponseEntity<List<TrabajadorDto>> getTrabajadoresPorEstado(
+            @PathVariable String estado) {
+
+        List<Trabajador> trabajadores = trabajadorService.getAll().stream()
+                .filter(t -> estado.equalsIgnoreCase(t.getEstadoTrabajador()))
+                .collect(Collectors.toList());
+
+        if (trabajadores.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<TrabajadorDto> dtos = trabajadores.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/trabajadores/especialidad/{especialidad}")
+    public ResponseEntity<List<TrabajadorDto>> getTrabajadoresPorEspecialidad(
+            @PathVariable String especialidad) {
+
+        List<Trabajador> trabajadores = trabajadorService.getAll().stream()
+                .filter(t -> especialidad.equalsIgnoreCase(t.getEspecialidadTrabajador()))
+                .collect(Collectors.toList());
+
+        if (trabajadores.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<TrabajadorDto> dtos = trabajadores.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
     private TrabajadorDto convertToDto(Trabajador trabajador) {
         return TrabajadorDto.builder()
                 .idTrabajador(trabajador.getIdTrabajador())
@@ -98,5 +169,4 @@ public class TrabajadorController {
                 .estadoTrabajador(dto.getEstadoTrabajador())
                 .build();
     }
-
 }

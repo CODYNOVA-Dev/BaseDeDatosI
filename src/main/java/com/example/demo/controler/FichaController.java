@@ -5,10 +5,8 @@ import com.example.demo.model.*;
 import com.example.demo.service.FichaService;
 import com.example.demo.service.TrabajadorService;
 import lombok.AllArgsConstructor;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,9 +18,6 @@ public class FichaController {
     private final FichaService fichaService;
     private final TrabajadorService trabajadorService;
 
-    // =====================================================
-    // GET ALL
-    // =====================================================
     @GetMapping("/fichas")
     public ResponseEntity<List<FichaDto>> getAll() {
         List<Ficha> fichas = fichaService.getAll();
@@ -38,19 +33,12 @@ public class FichaController {
         return ResponseEntity.ok(dtos);
     }
 
-    // =====================================================
-    // CREATE (POST)
-    // =====================================================
     @PostMapping("/fichas")
     public ResponseEntity<FichaDto> create(@RequestBody FichaDto dto) {
         try {
-            // 1️⃣ Convertir DTO a entidad
             Ficha ficha = convertToEntity(dto);
-
-            // 2️⃣ Guardar ficha primero para obtener ID
             Ficha savedFicha = fichaService.save(ficha);
 
-            // 3️⃣ Asignar trabajadores existentes si se proporcionan IDs
             if (dto.getTrabajadoresIds() != null && !dto.getTrabajadoresIds().isEmpty()) {
                 List<Trabajador> trabajadores = dto.getTrabajadoresIds().stream()
                         .map(trabajadorService::getById)
@@ -58,14 +46,10 @@ public class FichaController {
                         .peek(t -> t.setFicha(savedFicha))
                         .collect(Collectors.toList());
 
-                // Guardar los trabajadores actualizados
                 trabajadorService.saveAll(trabajadores);
-
-                // Actualizar la lista de la ficha
                 savedFicha.setTrabajadores(trabajadores);
             }
 
-            // 4️⃣ Devolver DTO
             return ResponseEntity.ok(convertToDto(savedFicha));
 
         } catch (Exception e) {
@@ -74,10 +58,6 @@ public class FichaController {
         }
     }
 
-
-    // =====================================================
-    // GET BY ID
-    // =====================================================
     @GetMapping("/fichas/{id}")
     public ResponseEntity<FichaDto> getById(@PathVariable Integer id) {
         Ficha ficha = fichaService.getById(id);
@@ -87,9 +67,6 @@ public class FichaController {
         return ResponseEntity.ok(convertToDto(ficha));
     }
 
-    // =====================================================
-    // UPDATE
-    // =====================================================
     @PutMapping("/fichas/{id}")
     public ResponseEntity<FichaDto> update(@PathVariable Integer id, @RequestBody FichaDto dto) {
         Ficha entity = convertToEntity(dto);
@@ -102,9 +79,6 @@ public class FichaController {
         return ResponseEntity.ok(convertToDto(actualizado));
     }
 
-    // =====================================================
-    // DELETE
-    // =====================================================
     @DeleteMapping("/fichas/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         fichaService.delete(id);
@@ -112,8 +86,77 @@ public class FichaController {
     }
 
     // =====================================================
-    // CONVERTERS
+    // NUEVOS MÉTODOS PARA LA APP ANDROID
     // =====================================================
+
+    @GetMapping("/fichas/filtros")
+    public ResponseEntity<List<FichaDto>> getFichasFiltradas(
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String especialidad) {
+
+        List<Ficha> fichas = fichaService.getAll();
+
+        if (estado != null && !estado.isEmpty()) {
+            fichas = fichas.stream()
+                    .filter(f -> estado.equalsIgnoreCase(f.getFichaEstado()))
+                    .collect(Collectors.toList());
+        }
+
+        if (especialidad != null && !especialidad.isEmpty()) {
+            fichas = fichas.stream()
+                    .filter(f -> especialidad.equalsIgnoreCase(f.getFichaEspecialidad()))
+                    .collect(Collectors.toList());
+        }
+
+        if (fichas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<FichaDto> dtos = fichas.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/fichas/estado/{estado}")
+    public ResponseEntity<List<FichaDto>> getFichasPorEstado(
+            @PathVariable String estado) {
+
+        List<Ficha> fichas = fichaService.getAll().stream()
+                .filter(f -> estado.equalsIgnoreCase(f.getFichaEstado()))
+                .collect(Collectors.toList());
+
+        if (fichas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<FichaDto> dtos = fichas.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/fichas/especialidad/{especialidad}")
+    public ResponseEntity<List<FichaDto>> getFichasPorEspecialidad(
+            @PathVariable String especialidad) {
+
+        List<Ficha> fichas = fichaService.getAll().stream()
+                .filter(f -> especialidad.equalsIgnoreCase(f.getFichaEspecialidad()))
+                .collect(Collectors.toList());
+
+        if (fichas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<FichaDto> dtos = fichas.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
     private FichaDto convertToDto(Ficha ficha) {
         return FichaDto.builder()
                 .idFicha(ficha.getIdFicha())
