@@ -7,9 +7,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminDto {
+
     private Integer idAdmin;
     private String correoAdmin;
-    private String contraseñaAdmin;
+    private String contraseñaAdmin;  // Se mantiene para crear/editar admins
+
 
     @Data
     @NoArgsConstructor
@@ -26,7 +28,7 @@ public class AdminDto {
     public static class LoginResponse {
         private boolean success;
         private String message;
-        private AdminDto admin;
-        private String token; // Para futura autenticación JWT
+        private AdminDto admin; // Se enviará sin contraseña (lo controlas en el controller)
+        private String token;
     }
 }

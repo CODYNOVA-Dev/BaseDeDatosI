@@ -11,5 +11,6 @@ public class TrabajadorDto {
     private String nssTrabajador;
     private String nombreTrabajador;
     private String especialidadTrabajador;
-    private String categoriaTrabajador;
+    private String estadoTrabajador;
+
 }

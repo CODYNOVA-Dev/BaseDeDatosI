@@ -1,0 +1,81 @@
+DROP DATABASE IF EXISTS indecsa;
+CREATE DATABASE indecsa;
+USE indecsa;
+
+-- ================================
+--           CONTRATISTA
+-- ================================
+CREATE TABLE Contratista (
+    id_contratista INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_contratista VARCHAR(100) NOT NULL,
+    estado_contratista VARCHAR(50) DEFAULT NULL,
+    descripcion_contratista VARCHAR(100) NOT NULL,
+    calificacion INT DEFAULT NULL,
+    especialidad VARCHAR(25) NOT NULL,
+    telefono VARCHAR(15) NOT NULL,
+    correo VARCHAR(50) NOT NULL
+);
+
+-- ================================
+--           PROYECTO
+-- ================================
+CREATE TABLE Proyecto (
+    id_proyecto INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_proyecto VARCHAR(100) NOT NULL,
+    tipo_proyecto VARCHAR(50),
+    lugar_proyecto VARCHAR(100),
+    fechainicio_proyecto DATE,
+    fechafin_proyecto DATE,
+    cliente_proyecto VARCHAR(50)
+);
+
+-- ================================
+--             FICHA
+-- ================================
+CREATE TABLE Ficha (
+    id_ficha INT AUTO_INCREMENT PRIMARY KEY,
+    id_contratista INT NOT NULL,
+    id_proyecto INT NOT NULL,
+    ficha_estado VARCHAR(50),
+    ficha_especialidad VARCHAR(50),
+    FOREIGN KEY (id_contratista) REFERENCES Contratista(id_contratista)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (id_proyecto) REFERENCES Proyecto(id_proyecto)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+-- ================================
+--            TRABAJADOR
+-- ================================
+CREATE TABLE Trabajador (
+    id_trabajador INT AUTO_INCREMENT PRIMARY KEY,
+    nss_trabajador VARCHAR(15),
+    nombre_trabajador VARCHAR(100) NOT NULL,
+    especialidad_trabajador VARCHAR(50) NOT NULL,
+    estado_trabajador VARCHAR(50) NOT NULL,
+    id_ficha INT DEFAULT NULL,
+    FOREIGN KEY (id_ficha) REFERENCES Ficha(id_ficha)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);
+
+-- ================================
+--            ADMIN
+-- ================================
+CREATE TABLE Admin (
+    id_admin INT AUTO_INCREMENT PRIMARY KEY,
+    contraseña_admin VARCHAR(255) NOT NULL,
+    correo_admin VARCHAR(50) NOT NULL
+);
+
+-- ================================
+--         CAPITAL HUMANO
+-- ================================
+CREATE TABLE CapitalHumano (
+    id_CapHum INT AUTO_INCREMENT PRIMARY KEY,
+    contraseña_CapHum VARCHAR(255) NOT NULL,
+    correo_CapHum VARCHAR(50) NOT NULL
+);
+

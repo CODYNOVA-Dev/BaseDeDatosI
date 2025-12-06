@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Admin {
+public final class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_admin")
@@ -23,6 +23,5 @@ public class Admin {
     @Column(name = "contraseña_admin", length = 255)
     private String contraseñaAdmin;
 
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
-    private List<Ficha> fichas = new ArrayList<>();
+
 }

@@ -86,7 +86,7 @@ public class TrabajadorController {
                 .nssTrabajador(trabajador.getNssTrabajador())
                 .nombreTrabajador(trabajador.getNombreTrabajador())
                 .especialidadTrabajador(trabajador.getEspecialidadTrabajador())
-                .categoriaTrabajador(trabajador.getCategoriaTrabajador())
+                .estadoTrabajador(trabajador.getEstadoTrabajador())
                 .build();
     }
 
@@ -95,7 +95,8 @@ public class TrabajadorController {
                 .nssTrabajador(dto.getNssTrabajador())
                 .nombreTrabajador(dto.getNombreTrabajador())
                 .especialidadTrabajador(dto.getEspecialidadTrabajador())
-                .categoriaTrabajador(dto.getCategoriaTrabajador())
+                .estadoTrabajador(dto.getEstadoTrabajador())
                 .build();
     }
+
 }

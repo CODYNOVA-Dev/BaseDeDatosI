@@ -35,7 +35,7 @@ public class TrabajadorService {
         trabajadorExistente.setNssTrabajador(datos.getNssTrabajador());
         trabajadorExistente.setNombreTrabajador(datos.getNombreTrabajador());
         trabajadorExistente.setEspecialidadTrabajador(datos.getEspecialidadTrabajador());
-        trabajadorExistente.setCategoriaTrabajador(datos.getCategoriaTrabajador());
+        trabajadorExistente.setEstadoTrabajador(datos.getEstadoTrabajador());
 
         return trabajadorRepository.save(trabajadorExistente);
     }
@@ -47,4 +47,9 @@ public class TrabajadorService {
     public Trabajador getByNss(String nssTrabajador) {
         return trabajadorRepository.findByNssTrabajador(nssTrabajador).orElse(null);
     }
+
+    public void saveAll(List<Trabajador> trabajadores) {
+        trabajadorRepository.saveAll(trabajadores);
+    }
+
 }
