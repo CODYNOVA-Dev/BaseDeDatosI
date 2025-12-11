@@ -1,7 +1,6 @@
 package com.example.demo.dto;
 
 import lombok.*;
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -12,7 +11,8 @@ public class ProyectoDto {
     private String nombreProyecto;
     private String tipoProyecto;
     private String lugarProyecto;
-    private LocalDate fechaInicioProyecto;
-    private LocalDate fechaFinProyecto;
-    private String clienteProyecto;
+    // ELIMINA estos campos que ya no existen en la BD:
+    // private LocalDate fechaInicioProyecto;
+    // private LocalDate fechaFinProyecto;
+    // private String clienteProyecto;
 }
