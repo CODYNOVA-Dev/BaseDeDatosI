@@ -221,7 +221,7 @@ public class FichaController {
             log.info("No se encontraron fichas con especialidad: {}", especialidadReal);
             return ResponseEntity.noContent().build();
         }
-
+ 
         log.info("Encontradas {} fichas con especialidad {}", fichas.size(), especialidadReal);
         List<FichaDto> dtos = fichas.stream()
                 .map(this::convertToDto)
