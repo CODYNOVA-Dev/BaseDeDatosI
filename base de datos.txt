@@ -56,6 +56,7 @@ CREATE TABLE Trabajador (
     especialidad_trabajador VARCHAR(50) NOT NULL,
     estado_trabajador VARCHAR(50) NOT NULL,
     id_ficha INT DEFAULT NULL,
+    descripcion_trabajador VARCHAR(500) DEFAULT 'Sin descripción',
     FOREIGN KEY (id_ficha) REFERENCES Ficha(id_ficha)
         ON UPDATE CASCADE
         ON DELETE SET NULL
@@ -78,4 +79,32 @@ CREATE TABLE CapitalHumano (
     contraseña_CapHum VARCHAR(255) NOT NULL,
     correo_CapHum VARCHAR(50) NOT NULL
 );
+
+-- ================================
+--     ACTUALIZAR DESCRIPCIONES
+-- ================================
+UPDATE Trabajador
+SET descripcion_trabajador = CONCAT('Trabajador especializado en ', especialidad_trabajador)
+WHERE id_trabajador > 0;
+
+
+USE indecsa;
+
+-- Eliminar solo lo que NO necesitamos:
+-- Eliminar calificación de Contratista
+ALTER TABLE Contratista 
+DROP COLUMN calificacion;
+
+-- Eliminar fechas y cliente de Proyecto
+ALTER TABLE Proyecto 
+DROP COLUMN fechainicio_proyecto,
+DROP COLUMN fechafin_proyecto,
+DROP COLUMN cliente_proyecto;
+
+-- Verificar que las tablas estén correctas
+DESCRIBE Contratista;
+DESCRIBE Proyecto;
+DESCRIBE Ficha;
+DESCRIBE Trabajador;
+
 
