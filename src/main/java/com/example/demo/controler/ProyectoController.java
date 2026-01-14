@@ -77,7 +77,6 @@ public class ProyectoController {
                 .nombreProyecto(proyecto.getNombreProyecto())
                 .tipoProyecto(proyecto.getTipoProyecto())
                 .lugarProyecto(proyecto.getLugarProyecto())
-                // NO incluyas los campos eliminados
                 .build();
     }
 
@@ -86,7 +85,6 @@ public class ProyectoController {
                 .nombreProyecto(dto.getNombreProyecto())
                 .tipoProyecto(dto.getTipoProyecto())
                 .lugarProyecto(dto.getLugarProyecto())
-                // NO incluyas los campos eliminados
                 .build();
     }
 }

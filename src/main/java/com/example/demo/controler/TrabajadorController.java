@@ -274,6 +274,7 @@ public class TrabajadorController {
                 .estadoTrabajador(dto.getEstadoTrabajador())
                 .descripcionTrabajador(dto.getDescripcionTrabajador())
                 .build();
+
     }
 
     private String convertirEspecialidad(String especialidad) {
@@ -296,4 +297,29 @@ public class TrabajadorController {
         }
         return especialidad;
     }
+
+    @GetMapping("/trabajadores/disponibles")
+    public ResponseEntity<List<TrabajadorDto>> getTrabajadoresDisponibles(
+            @RequestParam(value = "estado", required = false) String estado,
+            @RequestParam(value = "especialidad", required = false) String especialidad
+    ) {
+
+        log.info("GET /trabajadores/disponibles - Estado: {}, Especialidad: {}", estado, especialidad);
+
+        String especialidadReal = convertirEspecialidad(especialidad);
+
+        List<Trabajador> trabajadores =
+                trabajadorService.getDisponiblesFiltrados(estado, especialidadReal);
+
+        if (trabajadores.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(
+                trabajadores.stream()
+                        .map(this::convertToDto)
+                        .collect(Collectors.toList())
+        );
+    }
+
 }

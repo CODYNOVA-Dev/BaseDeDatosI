@@ -13,44 +13,34 @@ public class ProyectoService {
 
     private final ProyectoRepository proyectoRepository;
 
-    // 🔹 Obtener todos
     public List<Proyecto> getAll() {
         return proyectoRepository.findAll();
     }
 
-    // 🔹 Obtener por ID
     public Proyecto getById(Integer id) {
         return proyectoRepository.findById(id).orElse(null);
     }
 
-    // 🔹 Guardar
     public Proyecto save(Proyecto proyecto) {
         return proyectoRepository.save(proyecto);
     }
 
-    // 🔹 Eliminar
+    public Proyecto update(Integer id, Proyecto proyecto) {
+        Proyecto existing = getById(id);
+        if (existing == null) return null;
+
+        existing.setNombreProyecto(proyecto.getNombreProyecto());
+        existing.setTipoProyecto(proyecto.getTipoProyecto());
+        existing.setLugarProyecto(proyecto.getLugarProyecto());
+
+        return proyectoRepository.save(existing);
+    }
+
     public void delete(Integer id) {
         proyectoRepository.deleteById(id);
     }
 
-    // 🔹 Actualizar
-    public Proyecto update(Integer id, Proyecto datos) {
-        Proyecto proyectoExistente = getById(id);
-        if (proyectoExistente == null) {
-            return null;
-        }
-
-        proyectoExistente.setNombreProyecto(datos.getNombreProyecto());
-        proyectoExistente.setTipoProyecto(datos.getTipoProyecto());
-        proyectoExistente.setLugarProyecto(datos.getLugarProyecto());
-        proyectoExistente.setClienteProyecto(datos.getClienteProyecto());
-        proyectoExistente.setPresupuesto(datos.getPresupuesto());
-
-        return proyectoRepository.save(proyectoExistente);
-    }
-
-    // 🔹 Validar si existe por nombre
-    public boolean existsByNombre(String nombreProyecto) {
-        return proyectoRepository.existsByNombreProyecto(nombreProyecto);
+    public boolean existsByNombre(String nombre) {
+        return proyectoRepository.existsByNombreProyecto(nombre);
     }
 }

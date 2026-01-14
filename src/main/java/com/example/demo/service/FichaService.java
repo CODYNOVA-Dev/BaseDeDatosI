@@ -14,6 +14,7 @@ public class FichaService {
     private final FichaRepository fichaRepository;
     private final ContratistaRepository contratistaRepository;
     private final ProyectoRepository proyectoRepository;
+    private final TrabajadorRepository trabajadorRepository;
 
     public List<Ficha> getAll() {
         return fichaRepository.findAll();
@@ -24,6 +25,25 @@ public class FichaService {
     }
 
     public Ficha save(Ficha ficha) {
+        if (ficha.getContratista() != null &&
+                !contratistaRepository.existsById(ficha.getContratista().getIdContratista())) {
+            throw new RuntimeException("Contratista no encontrado");
+        }
+
+        if (ficha.getProyecto() != null &&
+                !proyectoRepository.existsById(ficha.getProyecto().getIdProyecto())) {
+            throw new RuntimeException("Proyecto no encontrado");
+        }
+
+        return fichaRepository.save(ficha);
+    }
+
+    // ================================
+    // 🔥 MÉTODO PARA CREAR FICHA CON TRABAJADORES
+    // ================================
+    public Ficha crearFichaConTrabajadores(Ficha ficha, List<Integer> trabajadoresIds) {
+
+        // 1️⃣ Validaciones existentes
         if (!contratistaRepository.existsById(ficha.getContratista().getIdContratista())) {
             throw new RuntimeException("Contratista no encontrado");
         }
@@ -32,7 +52,22 @@ public class FichaService {
             throw new RuntimeException("Proyecto no encontrado");
         }
 
-        return fichaRepository.save(ficha);
+        // 2️⃣ Guardar ficha
+        Ficha fichaCreada = fichaRepository.save(ficha);
+
+        // 3️⃣ Marcar trabajadores como OCUPADOS
+        for (Integer idTrabajador : trabajadoresIds) {
+            Trabajador trabajador = trabajadorRepository.findById(idTrabajador)
+                    .orElseThrow(() ->
+                            new RuntimeException("Trabajador no encontrado: " + idTrabajador)
+                    );
+
+            // 🔴 AQUÍ SE MARCA OCUPADO
+            trabajador.setFicha(fichaCreada);
+            trabajadorRepository.save(trabajador);
+        }
+
+        return fichaCreada;
     }
 
     public void delete(Integer id) {
@@ -49,6 +84,14 @@ public class FichaService {
 
         if (data.getProyecto() != null) {
             existing.setProyecto(data.getProyecto());
+        }
+
+        if (data.getFichaEstado() != null) {
+            existing.setFichaEstado(data.getFichaEstado());
+        }
+
+        if (data.getFichaEspecialidad() != null) {
+            existing.setFichaEspecialidad(data.getFichaEspecialidad());
         }
 
         return fichaRepository.save(existing);

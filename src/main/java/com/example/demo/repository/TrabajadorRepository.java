@@ -14,4 +14,19 @@ public interface TrabajadorRepository extends JpaRepository<Trabajador, Integer>
     List<Trabajador> findByEstadoTrabajador(String estado);
     List<Trabajador> findByEspecialidadTrabajador(String especialidad);
     List<Trabajador> findByEstadoTrabajadorAndEspecialidadTrabajador(String estado, String especialidad);
+
+
+    // SOLO trabajadores disponibles
+    List<Trabajador> findByFichaIsNull();
+
+    // Disponibles + filtros
+    List<Trabajador> findByFichaIsNullAndEstadoTrabajador(String estado);
+
+    List<Trabajador> findByFichaIsNullAndEspecialidadTrabajador(String especialidad);
+
+    List<Trabajador> findByFichaIsNullAndEstadoTrabajadorAndEspecialidadTrabajador(
+            String estado,
+            String especialidad
+    );
+
 }

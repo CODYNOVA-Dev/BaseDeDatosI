@@ -99,4 +99,39 @@ public class TrabajadorService {
             return getAll();
         }
     }
+
+    // ================================
+// DISPONIBILIDAD
+// ================================
+
+    public List<Trabajador> getDisponibles() {
+        return trabajadorRepository.findByFichaIsNull();
+    }
+
+    public List<Trabajador> getDisponiblesFiltrados(String estado, String especialidad) {
+
+        if (estado != null && !estado.isEmpty()
+                && especialidad != null && !especialidad.isEmpty()) {
+
+            return trabajadorRepository
+                    .findByFichaIsNullAndEstadoTrabajadorAndEspecialidadTrabajador(
+                            estado, especialidad
+                    );
+
+        } else if (estado != null && !estado.isEmpty()) {
+
+            return trabajadorRepository
+                    .findByFichaIsNullAndEstadoTrabajador(estado);
+
+        } else if (especialidad != null && !especialidad.isEmpty()) {
+
+            return trabajadorRepository
+                    .findByFichaIsNullAndEspecialidadTrabajador(especialidad);
+
+        } else {
+            return trabajadorRepository.findByFichaIsNull();
+        }
+    }
+
+
 }

@@ -3,7 +3,8 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "proyecto")
@@ -18,18 +19,15 @@ public class Proyecto {
     @Column(name = "id_proyecto")
     private Integer idProyecto;
 
-    @Column(name = "nombre_proyecto", nullable = false, length = 100)
+    @Column(name = "nombre_proyecto", nullable = false)
     private String nombreProyecto;
 
-    @Column(name = "tipo_proyecto", length = 50)
+    @Column(name = "tipo_proyecto")
     private String tipoProyecto;
 
-    @Column(name = "lugar_proyecto", length = 100)
+    @Column(name = "lugar_proyecto")
     private String lugarProyecto;
 
-    @Column(name = "cliente_proyecto", length = 50)
-    private String clienteProyecto;
-
-    @Column(name = "presupuesto", precision = 15, scale = 2)
-    private BigDecimal presupuesto;
+    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL)
+    private List<Ficha> fichas = new ArrayList<>();
 }

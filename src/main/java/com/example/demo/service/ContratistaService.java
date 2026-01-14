@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ContratistaDto;
 import com.example.demo.model.Contratista;
 import com.example.demo.repository.ContratistaRepository;
 import lombok.AllArgsConstructor;
@@ -28,20 +29,27 @@ public class ContratistaService {
         contratistaRepository.deleteById(id);
     }
 
-    public Contratista update(Integer id, Contratista datos) {
-        Contratista existente = getById(id);
+    // ✅ UPDATE CORRECTO (desde DTO)
+    public Contratista updateFromDto(Integer id, ContratistaDto dto) {
+        Contratista existente = contratistaRepository.findById(id).orElse(null);
         if (existente == null) return null;
 
-        existente.setNombreContratista(datos.getNombreContratista());
-        existente.setEstadoContratista(datos.getEstadoContratista());
-        existente.setDescripcionContratista(datos.getDescripcionContratista());
-        existente.setCalificacion(datos.getCalificacion());
-        existente.setEspecialidad(datos.getEspecialidad());
-        existente.setTelefono(datos.getTelefono());
-        existente.setCorreo(datos.getCorreo());
+        existente.setNombreContratista(dto.getNombreContratista());
+        existente.setDescripcionContratista(dto.getDescripcionContratista());
+        existente.setEspecialidad(dto.getEspecialidad());
+        existente.setTelefono(dto.getTelefono());
+        existente.setCorreo(dto.getCorreo());
+
+        existente.setEstadoContratista(dto.getEstadoContratista());
+
+        // 🔥 PROTECCIÓN CLAVE
+        if (dto.getCalificacion() != null) {
+            existente.setCalificacion(dto.getCalificacion());
+        }
 
         return contratistaRepository.save(existente);
     }
+
 
     public boolean existsByCorreo(String correo) {
         return contratistaRepository.existsByCorreo(correo);

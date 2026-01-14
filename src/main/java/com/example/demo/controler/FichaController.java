@@ -9,9 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,7 +31,6 @@ public class FichaController {
         ESTADOS_MAP.put("CDMX", "CDMX");
         ESTADOS_MAP.put("PUEBLA", "Puebla");
         ESTADOS_MAP.put("Hidalgo", "Hidalgo");
-        ESTADOS_MAP.put("CDMX", "CDMX");
         ESTADOS_MAP.put("Puebla", "Puebla");
 
         // Especialidades
@@ -50,6 +48,8 @@ public class FichaController {
         ESPECIALIDADES_MAP.put("Instalación de Mobiliario", "Instalación de Mobiliario");
     }
 
+    // ================= CRUD BÁSICO =================
+
     @GetMapping("/fichas")
     public ResponseEntity<List<FichaDto>> getAll() {
         log.info("GET /fichas - Obteniendo todas las fichas");
@@ -61,11 +61,20 @@ public class FichaController {
         }
 
         log.info("Encontradas {} fichas", fichas.size());
-        List<FichaDto> dtos = fichas.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        return ResponseEntity.ok(
+                fichas.stream().map(this::convertToDto).collect(Collectors.toList())
+        );
+    }
 
-        return ResponseEntity.ok(dtos);
+    @GetMapping("/fichas/{id}")
+    public ResponseEntity<FichaDto> getById(@PathVariable Integer id) {
+        log.info("GET /fichas/{} - Buscando ficha por ID", id);
+        Ficha ficha = fichaService.getById(id);
+        if (ficha == null) {
+            log.warn("Ficha con ID {} no encontrada", id);
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(convertToDto(ficha));
     }
 
     @PostMapping("/fichas")
@@ -97,29 +106,14 @@ public class FichaController {
         }
     }
 
-    @GetMapping("/fichas/{id}")
-    public ResponseEntity<FichaDto> getById(@PathVariable Integer id) {
-        log.info("GET /fichas/{} - Buscando ficha por ID", id);
-        Ficha ficha = fichaService.getById(id);
-        if (ficha == null) {
-            log.warn("Ficha con ID {} no encontrada", id);
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(convertToDto(ficha));
-    }
-
     @PutMapping("/fichas/{id}")
     public ResponseEntity<FichaDto> update(@PathVariable Integer id, @RequestBody FichaDto dto) {
         log.info("PUT /fichas/{} - Actualizando ficha", id);
-
-        Ficha entity = convertToEntity(dto);
-        Ficha actualizado = fichaService.update(id, entity);
-
+        Ficha actualizado = fichaService.update(id, convertToEntity(dto));
         if (actualizado == null) {
             log.warn("Ficha con ID {} no encontrada para actualizar", id);
             return ResponseEntity.notFound().build();
         }
-
         log.info("Ficha ID {} actualizada exitosamente", id);
         return ResponseEntity.ok(convertToDto(actualizado));
     }
@@ -137,9 +131,32 @@ public class FichaController {
         return ResponseEntity.noContent().build();
     }
 
-    // =====================================================
-    // ENDPOINTS PARA LA APP ANDROID (igual que trabajadores)
-    // =====================================================
+    // ================= ENDPOINTS DE FILTROS =================
+
+    @GetMapping("/fichas/completas/filtros")
+    public ResponseEntity<List<FichaCompletaDto>> getFichasCompletasFiltradas(
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String especialidad) {
+
+        log.info("GET /fichas/completas/filtros - Estado: {}, Especialidad: {}", estado, especialidad);
+
+        String estadoReal = convertirEstado(estado);
+        String especialidadReal = convertirEspecialidad(especialidad);
+
+        List<FichaCompletaDto> lista = fichaService.getAll().stream()
+                .filter(f -> estadoReal == null || estadoReal.equalsIgnoreCase(f.getFichaEstado()))
+                .filter(f -> especialidadReal == null || especialidadReal.equalsIgnoreCase(f.getFichaEspecialidad()))
+                .map(this::convertToCompletaDto)
+                .collect(Collectors.toList());
+
+        if (lista.isEmpty()) {
+            log.info("No se encontraron fichas con filtros aplicados");
+            return ResponseEntity.noContent().build();
+        }
+
+        log.info("Encontradas {} fichas completas con filtros", lista.size());
+        return ResponseEntity.ok(lista);
+    }
 
     @GetMapping("/fichas/filtros")
     public ResponseEntity<List<FichaDto>> getFichasFiltradas(
@@ -175,17 +192,13 @@ public class FichaController {
         }
 
         log.info("Encontradas {} fichas con los filtros aplicados", fichas.size());
-        List<FichaDto> dtos = fichas.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(
+                fichas.stream().map(this::convertToDto).collect(Collectors.toList())
+        );
     }
 
     @GetMapping("/fichas/estado/{estado}")
-    public ResponseEntity<List<FichaDto>> getFichasPorEstado(
-            @PathVariable("estado") String estado) {
-
+    public ResponseEntity<List<FichaDto>> getFichasPorEstado(@PathVariable("estado") String estado) {
         log.info("GET /fichas/estado/{} - Buscando por estado", estado);
 
         String estadoReal = convertirEstado(estado);
@@ -199,17 +212,13 @@ public class FichaController {
         }
 
         log.info("Encontradas {} fichas en el estado {}", fichas.size(), estadoReal);
-        List<FichaDto> dtos = fichas.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(
+                fichas.stream().map(this::convertToDto).collect(Collectors.toList())
+        );
     }
 
     @GetMapping("/fichas/especialidad/{especialidad}")
-    public ResponseEntity<List<FichaDto>> getFichasPorEspecialidad(
-            @PathVariable("especialidad") String especialidad) {
-
+    public ResponseEntity<List<FichaDto>> getFichasPorEspecialidad(@PathVariable("especialidad") String especialidad) {
         log.info("GET /fichas/especialidad/{} - Buscando por especialidad", especialidad);
 
         String especialidadReal = convertirEspecialidad(especialidad);
@@ -221,13 +230,11 @@ public class FichaController {
             log.info("No se encontraron fichas con especialidad: {}", especialidadReal);
             return ResponseEntity.noContent().build();
         }
- 
-        log.info("Encontradas {} fichas con especialidad {}", fichas.size(), especialidadReal);
-        List<FichaDto> dtos = fichas.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(dtos);
+        log.info("Encontradas {} fichas con especialidad {}", fichas.size(), especialidadReal);
+        return ResponseEntity.ok(
+                fichas.stream().map(this::convertToDto).collect(Collectors.toList())
+        );
     }
 
     @GetMapping("/fichas/diagnostico")
@@ -267,9 +274,7 @@ public class FichaController {
         return ResponseEntity.ok(resultado);
     }
 
-    // =====================================================
-    // MÉTODOS PRIVADOS
-    // =====================================================
+    // ================= CONVERSORES =================
 
     private FichaDto convertToDto(Ficha ficha) {
         return FichaDto.builder()
@@ -290,6 +295,8 @@ public class FichaController {
 
     private Ficha convertToEntity(FichaDto dto) {
         Ficha ficha = new Ficha();
+        ficha.setFichaEstado(dto.getFichaEstado());
+        ficha.setFichaEspecialidad(dto.getFichaEspecialidad());
 
         if (dto.getIdContratista() != null) {
             Contratista contratista = new Contratista();
@@ -298,98 +305,20 @@ public class FichaController {
         }
 
         if (dto.getIdProyecto() != null) {
-            Proyecto proyecto = new Proyecto();
-            proyecto.setIdProyecto(dto.getIdProyecto());
-            ficha.setProyecto(proyecto);
+            Proyecto p = new Proyecto();
+            p.setIdProyecto(dto.getIdProyecto());
+            ficha.setProyecto(p);
         }
-
-        ficha.setFichaEstado(dto.getFichaEstado());
-        ficha.setFichaEspecialidad(dto.getFichaEspecialidad());
 
         return ficha;
     }
 
-    private String convertirEstado(String estado) {
-        if (estado == null) {
-            return null;
-        }
-        String convertida = ESTADOS_MAP.get(estado);
-        if (convertida != null) {
-            return convertida;
-        }
-        String upper = estado.toUpperCase();
-        if (upper.contains("HIDALGO")) {
-            return "Hidalgo";
-        } else if (upper.contains("CDMX") || upper.contains("CIUDAD DE MEXICO") || upper.contains("CIUDAD DE MÉXICO")) {
-            return "CDMX";
-        } else if (upper.contains("PUEBLA")) {
-            return "Puebla";
-        }
-        return estado;
-    }
-
-    private String convertirEspecialidad(String especialidad) {
-        if (especialidad == null) {
-            return null;
-        }
-        String convertida = ESPECIALIDADES_MAP.get(especialidad);
-        if (convertida != null) {
-            return convertida;
-        }
-        String upper = especialidad.toUpperCase();
-        if (upper.contains("INSTALACION") || upper.contains("INSTALACIÓN")) {
-            return "Instalación de Mobiliario";
-        } else if (upper.contains("VENTA")) {
-            return "Venta de Mobiliario";
-        } else if (upper.contains("REMODELACION") || upper.contains("REMODELACIÓN")) {
-            return "Remodelación";
-        } else if (upper.contains("OBRA")) {
-            return "Obra";
-        }
-        return especialidad;
-    }
-    // En FichaController.java, agrega este endpoint
-    @GetMapping("/fichas/completas/filtros")
-    public ResponseEntity<List<FichaCompletaDto>> getFichasCompletasFiltradas(
-            @RequestParam(value = "estado", required = false) String estado,
-            @RequestParam(value = "especialidad", required = false) String especialidad) {
-
-        log.info("GET /fichas/completas/filtros - Estado: {}, Especialidad: {}", estado, especialidad);
-
-        List<Ficha> fichas = fichaService.getAll();
-
-        // Aplicar filtros
-        String estadoReal = convertirEstado(estado);
-        String especialidadReal = convertirEspecialidad(especialidad);
-
-        if (estadoReal != null && !estadoReal.isEmpty()) {
-            fichas = fichas.stream()
-                    .filter(f -> estadoReal.equalsIgnoreCase(f.getFichaEstado()))
-                    .collect(Collectors.toList());
-        }
-
-        if (especialidadReal != null && !especialidadReal.isEmpty()) {
-            fichas = fichas.stream()
-                    .filter(f -> especialidadReal.equalsIgnoreCase(f.getFichaEspecialidad()))
-                    .collect(Collectors.toList());
-        }
-
-        if (fichas.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        List<FichaCompletaDto> dtos = fichas.stream()
-                .map(this::convertToCompletaDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(dtos);
-    }
-
     private FichaCompletaDto convertToCompletaDto(Ficha ficha) {
-        FichaCompletaDto dto = new FichaCompletaDto();
-        dto.setIdFicha(ficha.getIdFicha());
-        dto.setFichaEstado(ficha.getFichaEstado());
-        dto.setFichaEspecialidad(ficha.getFichaEspecialidad());
+        FichaCompletaDto dto = FichaCompletaDto.builder()
+                .idFicha(ficha.getIdFicha())
+                .fichaEstado(ficha.getFichaEstado())
+                .fichaEspecialidad(ficha.getFichaEspecialidad())
+                .build();
 
         // Datos del contratista
         if (ficha.getContratista() != null) {
@@ -402,12 +331,13 @@ public class FichaController {
 
         // Datos del proyecto
         if (ficha.getProyecto() != null) {
+            dto.setIdProyecto(ficha.getProyecto().getIdProyecto());
             dto.setNombreProyecto(ficha.getProyecto().getNombreProyecto());
             dto.setLugarProyecto(ficha.getProyecto().getLugarProyecto());
             dto.setTipoProyecto(ficha.getProyecto().getTipoProyecto());
         }
 
-        // Equipo de trabajo - ¡CORREGIDO! usa getNombre() no getNombreTrabajador()
+        // Equipo de trabajo
         if (ficha.getTrabajadores() != null && !ficha.getTrabajadores().isEmpty()) {
             String equipo = ficha.getTrabajadores().stream()
                     .map(t -> t.getNombreTrabajador() + " (" + t.getEspecialidadTrabajador() + ")")
@@ -418,5 +348,34 @@ public class FichaController {
         }
 
         return dto;
+    }
+
+    private String convertirEstado(String estado) {
+        if (estado == null) return null;
+
+        String convertida = ESTADOS_MAP.get(estado);
+        if (convertida != null) return convertida;
+
+        String upper = estado.toUpperCase();
+        if (upper.contains("HIDALGO")) return "Hidalgo";
+        if (upper.contains("CDMX") || upper.contains("CIUDAD DE MEXICO") || upper.contains("CIUDAD DE MÉXICO")) return "CDMX";
+        if (upper.contains("PUEBLA")) return "Puebla";
+
+        return estado;
+    }
+
+    private String convertirEspecialidad(String especialidad) {
+        if (especialidad == null) return null;
+
+        String convertida = ESPECIALIDADES_MAP.get(especialidad);
+        if (convertida != null) return convertida;
+
+        String upper = especialidad.toUpperCase();
+        if (upper.contains("INSTALACION") || upper.contains("INSTALACIÓN")) return "Instalación de Mobiliario";
+        if (upper.contains("VENTA")) return "Venta de Mobiliario";
+        if (upper.contains("REMODELACION") || upper.contains("REMODELACIÓN")) return "Remodelación";
+        if (upper.contains("OBRA")) return "Obra";
+
+        return especialidad;
     }
 }

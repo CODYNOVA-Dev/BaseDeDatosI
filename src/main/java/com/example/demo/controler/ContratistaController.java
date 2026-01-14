@@ -53,10 +53,13 @@ public class ContratistaController {
         return ResponseEntity.ok(convertToDto(saved));
     }
 
+    // CORREGIDO: Agregué @PathVariable que faltaba
     @PutMapping("/contratistas/{id}")
-    public ResponseEntity<ContratistaDto> update(@PathVariable Integer id, @RequestBody ContratistaDto dto) {
-        Contratista contratista = convertToEntity(dto);
-        Contratista actualizado = contratistaService.update(id, contratista);
+    public ResponseEntity<ContratistaDto> update(
+            @PathVariable("id") Integer id,
+            @RequestBody ContratistaDto dto) {
+
+        Contratista actualizado = contratistaService.updateFromDto(id, dto);
 
         if (actualizado == null) {
             return ResponseEntity.notFound().build();
@@ -64,6 +67,7 @@ public class ContratistaController {
 
         return ResponseEntity.ok(convertToDto(actualizado));
     }
+
 
     @DeleteMapping("/contratistas/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
