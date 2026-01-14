@@ -2,9 +2,8 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "proyecto")
@@ -13,12 +12,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Proyecto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_proyecto")
     private Integer idProyecto;
 
-    @Column(name = "nombre_proyecto", length = 100, nullable = false)
+    @Column(name = "nombre_proyecto", nullable = false, length = 100)
     private String nombreProyecto;
 
     @Column(name = "tipo_proyecto", length = 50)
@@ -27,15 +27,9 @@ public class Proyecto {
     @Column(name = "lugar_proyecto", length = 100)
     private String lugarProyecto;
 
-    @Column(name = "fechainicio_proyecto")
-    private LocalDate fechaInicioProyecto;
-
-    @Column(name = "fechafin_proyecto")
-    private LocalDate fechaFinProyecto;
-
     @Column(name = "cliente_proyecto", length = 50)
     private String clienteProyecto;
 
-    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL)
-    private List<Ficha> fichas = new ArrayList<>();
+    @Column(name = "presupuesto", precision = 15, scale = 2)
+    private BigDecimal presupuesto;
 }

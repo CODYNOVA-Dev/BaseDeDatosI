@@ -2,17 +2,18 @@ package com.example.demo.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProyectoDto {
+
     private Integer idProyecto;
     private String nombreProyecto;
     private String tipoProyecto;
     private String lugarProyecto;
-    // ELIMINA estos campos que ya no existen en la BD:
-    // private LocalDate fechaInicioProyecto;
-    // private LocalDate fechaFinProyecto;
-    // private String clienteProyecto;
+    private String clienteProyecto;
+    private BigDecimal presupuesto;
 }
